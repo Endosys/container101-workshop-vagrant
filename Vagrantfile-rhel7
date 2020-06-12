@@ -13,7 +13,7 @@ end
 register_script = %{
 if ! subscription-manager status; then
   sudo subscription-manager register --username=#{user} --password=#{password} --auto-attach
-  sudo subscription-manager repos --enable ansible-2.9-for-rhel-8-x86_64-rpms --enable=codeready-builder-for-rhel-8-x86_64-rpms
+  sudo subscription-manager repos --enable="rhel-7-server-rpms" --enable="rhel-7-server-extras-rpms" --enable="rhel-7-server-optional-rpms"
 fi
 }
 
@@ -32,12 +32,13 @@ ADDREPO
 }
 
 raytheon_container101_workshop = %{
-  sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
-  sudo dnf repolist
+  sudo yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+  sudo yum repolist
+  sudo yum -y install python2-pip python2-botocore python2-boto ansible
+  sudo pip install boto3
   wget https://releases.hashicorp.com/terraform/0.12.26/terraform_0.12.26_linux_amd64.zip # current release as of this date...check to see if a newer version is availabke
   sudo unzip terraform_0.12.26_linux_amd64.zip -d /usr/local/bin terraform
 
-  sudo dnf install -y git python3-virtualenv ansible
   mkdir src
   cd src/
   git clone https://github.com/RedHatGov/redhatgov.workshops.git
@@ -50,9 +51,9 @@ raytheon_container101_workshop = %{
   cp ~/all.yml group_vars/all.yml
   echo 'source /home/vagrant/src/redhatgov.workshops/containers_101/env.sh' >> ~/.bash_profile
   echo 'cd /home/vagrant/src/redhatgov.workshops/containers_101/' >> ~/.bash_profile
-  echo 'virtualenv --system-site-packages ansible' >> ~/.bash_profile
-  echo 'source ansible/bin/activate' >> ~/.bash_profile
-  echo 'pip install boto boto3' >> ~/.bash_profile
+  # echo 'virtualenv --system-site-packages ansible' >> ~/.bash_profile
+  # echo 'source ansible/bin/activate' >> ~/.bash_profile
+  # echo 'pip install boto boto3' >> ~/.bash_profile
 }
 
 unregister_script = %{
@@ -67,7 +68,7 @@ rm -rf .redhatgov
 }
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "generic/rhel8"
+  config.vm.box = "generic/rhel7"
 #  config.vm.box_version = "1.9.28"
   # Disable guest additions check, because at this point the VM 
   # will not be registered with RHEL via subsctiption-manager 
