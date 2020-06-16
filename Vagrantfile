@@ -40,7 +40,8 @@ raytheon_container101_workshop = %{
   sudo dnf install -y git python3-virtualenv ansible
   mkdir src
   cd src/
-  git clone https://github.com/RedHatGov/redhatgov.workshops.git
+  #git clone https://github.com/RedHatGov/redhatgov.workshops.git
+  git clone https://github.com/Endosys/redhatgov.workshops.git
   cd ~/src/redhatgov.workshops/containers_101/
   export AWS_ACCESS_KEY_ID=$(grep aws_access_key ~/all.yml | awk -F'"' '{print $2}')
   export AWS_SECRET_ACCESS_KEY=$(grep aws_secret_key ~/all.yml | awk -F'"' '{print $2}')
@@ -61,7 +62,7 @@ if subscription-manager status; then
 fi
 }
 workshop_remove_script = %{
-cd ~/src/redhatgov.workshops/ansible_tower_aws
+cd ~/src/redhatgov.workshops/containers_101
 ./unregister.sh
 rm -rf .redhatgov
 }
@@ -90,7 +91,7 @@ Vagrant.configure("2") do |config|
     trigger.info = "Unregistering this VM from RedHat Subscription Manager..."
     trigger.warn = "If this fails, unregister VMs manually at https://access.redhat.com/management/subscriptions"
     trigger.run_remote = {inline: unregister_script}
-    # trigger.run_remote = {inline: workshop_remove_script, privileged: false}
+    trigger.run_remote = {inline: workshop_remove_script, privileged: false}
     trigger.on_error = :continue
   end # trigger.before :destroy
 end # vagrant configure

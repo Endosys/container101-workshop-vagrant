@@ -7,11 +7,11 @@ echo ---------------Unregister AWS Ansible Workshop Systems---------------
 echo --------------------------------Start--------------------------------
 source /home/vagrant/.bash_profile
 
-cd  /home/vagrant/src/redhatgov.workshops/ansible_tower_aws
-ansible-playbook 4_unregister.yml
+cd  /home/vagrant/src/redhatgov.workshops/containers_101
+ansible-playbook 3_unregister.yml
 #ansible-playbook test.yml
 if [ ! $? -eq 0 ]; then
-  ansible-playbook 4_unregister.yml -e NOSSH=true
+  ansible-playbook 3_unregister.yml -e NOSSH=true
   #ansible-playbook test1.yml
 fi
 
