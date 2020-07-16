@@ -31,38 +31,32 @@ ansible-playbook 1_provision.yml
 
 >__NOTE:__ If 1_provision.yml playbook has errors you will need to start over after running 
 >```sh
->ansible-playbook 4_unregister.yml -e NOSSH=true
+>ansible-playbook 3_unregister.yml -e NOSSH=true
 >```
 
-__NOTE:__ Might need to remove escape characters from redhatgov.workshops/ansible_tower_aws/roles/admin_server_config/tasks/main.yml regex.  2_preload.yml might hang so you can just ctrl->C and run again until it finishes.
 ```sh
-ansible-playbook 2_preload.yml
-./admin.sh  #logs you into the admin host
+ansible-playbook 2_load.yml
 ```
-At this point, you should be on the admin host in AWS.
-```sh
-cd src/ansible_tower_aws
-source env.sh         # enter your workshop password here, it's in the all.yml file.
-ansible-playbook 3_load.yml
-```
->__NOTE:__  Playbook 3_load.yml does not install pip3 for the towers so you will need to run ansible command manually then rerun the 3_load.yml playbook 
->```sh
->ansible -i inventory/hosts tower_rhel_nodes -m package -a "name=python3-pip state=latest" --private-key .redhatgov/fierce-test-key -u ec2-user -b
->```
+>__NOTE:__  Playbook 2_load.yml will hang twice while doing the subscription manager tasks. After each time it hangs just run the playbook again.
 
 ## To test workshop
 copy the test-workshop.yml file onto the admin server and run
 ```sh
-ansible-playbook test-workshop.yml --syntax-check && ansible-playbook test-workshop.yml
+ansible nodes -m shell -a 'rpm -qa | grep docker'
+ansible nodes -m shell -a 'rpm -qa | grep podman'
+ansible nodes -m shell -a 'docker images redhatgov/alpine' -b 
+ansible nodes -m shell -a 'docker images redhatgov/fedora' -b
+ansible nodes -m shell -a 'podman images redhatgov/alpine' -b 
+ansible nodes -m shell -a 'podman images redhatgov/fedora' -b
 ```
 
 ## To remove the workshop environment from AWS
 ```sh
-ansible-playbook 4_unregister.yml
+ansible-playbook 3_unregister.yml
 ```
 > __NOTE:__ If any errors while unregistering run again with environment variable
 >```sh
->ansible-playbook 4_unregister.yml -e NOSSH=true
+>ansible-playbook 3_unregister.yml -e NOSSH=true
 >```
 
 ## Notes
