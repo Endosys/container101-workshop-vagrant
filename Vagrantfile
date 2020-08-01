@@ -4,6 +4,7 @@ user = ENV['RH_SUBSCRIPTION_MANAGER_USER']
 password = ENV['RH_SUBSCRIPTION_MANAGER_PW']
 source_all = '~/Downloads/containers101-aws-group_vars-all.yml'
 unreg_script = './unregister.sh'
+DOMAIN = 'workshop.org'
 
 if !user or !password
   puts 'Required environment variables not found. Please set RH_SUBSCRIPTION_MANAGER_USER and RH_SUBSCRIPTION_MANAGER_PW'
@@ -69,6 +70,7 @@ rm -rf .redhatgov
 
 Vagrant.configure("2") do |config|
   config.vm.box = "generic/rhel8"
+  config.vm.hostname = "containers.#{DOMAIN}"
 #  config.vm.box_version = "1.9.28"
   # Disable guest additions check, because at this point the VM 
   # will not be registered with RHEL via subsctiption-manager 
