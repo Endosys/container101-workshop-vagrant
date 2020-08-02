@@ -62,3 +62,5 @@ ansible-playbook 3_unregister.yml
 ## Notes
 
 Using the current latest versions of Vagrant and VirtualBox on MacOS, the version of VirtualBox Guest Additions is newer than the version packaged in roboxes/rhel8. Vagrant will try and update this before the VM has been registered with RHN so all calls to yum install fail. For this reason `config.vbguest.auto_update = false` is configured.
+
+# TEST123
